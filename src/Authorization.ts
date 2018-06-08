@@ -1,7 +1,7 @@
 import { Request } from './networking/Request';
 import { RestConnector } from './networking/RestConnector';
 
-interface AuthorizationConfig {
+export interface AuthorizationConfig {
   authorizeURL: string;
   tokenURL?: string;
 }
