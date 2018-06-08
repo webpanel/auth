@@ -13,12 +13,12 @@ import { AuthSession } from './AuthSession';
 import { Authorization } from './Authorization';
 // import LoginForm from './LoginForm';
 
-interface LoginProps {
+export interface LoginProps {
   oauthTokenURL: string;
   content: any;
   authSession: AuthSession;
 }
-interface LoginState {
+export interface LoginState {
   isAuthorizing: boolean;
   authorizationError: Error | null;
 }
