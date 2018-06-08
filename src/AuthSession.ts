@@ -33,6 +33,7 @@ export class AuthSession {
   };
 
   updateAccessToken = (accessToken: string) => {
+    console.log('??', accessToken);
     this.accessToken = accessToken;
   };
 

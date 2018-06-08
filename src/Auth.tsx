@@ -1,42 +1,49 @@
 import * as React from 'react';
-// import { observer } from 'mobx-react';
-// import { Subscriber, Broadcast } from 'react-broadcast';
+import { observer } from 'mobx-react';
 
-// import {
-//   Authorization,
-//   Renderer,
-//   RendererComponentProps,
-//   AuthSession,
-//   ContextObserver
-// } from '../../../../webana';
 import { AuthSession } from './AuthSession';
-import { Authorization } from './Authorization';
-// import LoginForm from './LoginForm';
+import { AuthorizationService } from './AuthorizationService';
 
-export interface LoginProps {
+export type AuthFormProps = {
+  authorize: (username: string, password: string) => Promise<void>;
+  isAuthorizing: boolean;
+  authorizationError?: Error;
+};
+
+export type AuthContentProps = {
+  logout: () => void;
+};
+
+export interface AuthProps {
   oauthTokenURL: string;
-  content: any;
-  authSession: AuthSession;
+  form: (props: AuthFormProps) => React.ReactNode;
+  content: (props: AuthContentProps) => React.ReactNode;
 }
-export interface LoginState {
+export interface AuthState {
   isAuthorizing: boolean;
   authorizationError: Error | null;
 }
 
-// @observer
-export class Login extends React.Component<LoginProps, LoginState> {
+@observer
+export class Auth extends React.Component<AuthProps, AuthState> {
   loggedInElement: JSX.Element | null = null;
-  auth = new Authorization({
+  authSession: AuthSession;
+
+  auth = new AuthorizationService({
     authorizeURL: this.props.oauthTokenURL
   });
 
   state = { isAuthorizing: false, authorizationError: null };
 
+  componentWillMount() {
+    this.authSession = AuthSession.current();
+  }
+
   handleLogin = async (username: string, password: string) => {
     this.setState({ isAuthorizing: true });
     try {
       let token = await this.auth.authorize(username, password);
-      this.props.authSession.updateAccessToken(token);
+      this.authSession.updateAccessToken(token);
     } catch (authorizationError) {
       this.setState({ authorizationError });
     }
@@ -44,41 +51,19 @@ export class Login extends React.Component<LoginProps, LoginState> {
   };
 
   render() {
-    if (this.props.authSession.isLogged()) {
-      // const { context } = this.props;
-      // const authSession = this.props.authSession;
-      // const auth = authSession.getTokenPayload();
-      // const ctx = { ...context, auth };
-      // console.log('login context', ctx, context);
-      return 'logged';
-      // <Broadcast channel="context" value={ctx}>
-      //   <Renderer content={this.props.config.content} />
-      // </Broadcast>
+    if (this.authSession.isLogged()) {
+      return this.props.content({
+        logout: () => {
+          this.authSession.logout();
+        }
+      });
     } else {
-      return 'login form';
-      // <LoginForm
-      //   handleLogin={this.handleLogin}
-      //   isAuthorizing={this.state.isAuthorizing}
-      //   authorizationError={this.state.authorizationError}
-      // />
+      return this.props.form({
+        authorize: async (username: string, password: string) => {
+          await this.handleLogin(username, password);
+        },
+        isAuthorizing: this.state.isAuthorizing
+      });
     }
   }
 }
-
-// const currentSession = AuthSession.current();
-// @observer
-// export class Login extends React.Component<LoginProps> {
-//   render() {
-//     return (
-//       <Subscriber channel="context">
-//         {ctx => (
-//           <LoginComponent
-//             {...this.props}
-//             authSession={currentSession}
-//             context={ctx}
-//           />
-//         )}
-//       </Subscriber>
-//     );
-//   }
-// }

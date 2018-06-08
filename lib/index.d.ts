@@ -1,2 +1,1 @@
-export { Login } from './Auth';
-export { AuthSession } from './AuthSession';
+export { Auth, AuthFormProps, AuthContentProps } from './Auth';

@@ -1,6 +1,3 @@
-// import { Response } from 'node-fetch';
-// import { Request } from '../Request';
-
 export { Request } from './Request';
 export { Response } from 'node-fetch';
 

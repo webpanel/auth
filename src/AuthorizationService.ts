@@ -26,7 +26,7 @@ const serialize = (
   return str.join('&');
 };
 
-export class Authorization {
+export class AuthorizationService {
   config: AuthorizationConfig;
   constructor(config: AuthorizationConfig) {
     this.config = config;
