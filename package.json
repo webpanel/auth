@@ -5,6 +5,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "module": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "patch-release": "npm version patch && git push --follow-tags && npm publish"
   },
