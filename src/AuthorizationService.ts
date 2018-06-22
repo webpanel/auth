@@ -4,6 +4,9 @@ import { RestConnector } from './networking/RestConnector';
 export interface AuthorizationConfig {
   authorizeURL: string;
   tokenURL?: string;
+  clientId?: string;
+  clientSecret?: string;
+  scope?: string;
 }
 
 const serialize = (
@@ -16,11 +19,13 @@ const serialize = (
     if (obj.hasOwnProperty(p)) {
       var k = prefix ? prefix + '[' + p + ']' : p,
         v = obj[p];
-      str.push(
-        v !== null && typeof v === 'object'
-          ? serialize(v, k)
-          : encodeURIComponent(k) + '=' + encodeURIComponent(v)
-      );
+      if (typeof v !== 'undefined') {
+        str.push(
+          v !== null && typeof v === 'object'
+            ? serialize(v, k)
+            : encodeURIComponent(k) + '=' + encodeURIComponent(v)
+        );
+      }
     }
   }
   return str.join('&');
@@ -32,27 +37,40 @@ export class AuthorizationService {
     this.config = config;
   }
 
+  getClientAuthHeader(): string | undefined {
+    if (this.config.clientId && this.config.clientSecret) {
+      const basicAuth = btoa(
+        `${this.config.clientId}:${this.config.clientSecret}`
+      );
+      return `Basic ${basicAuth}`;
+    }
+    return undefined;
+  }
+
   async authorize(username: string, password: string): Promise<string> {
     let connector = new RestConnector();
 
     let req = new Request({ url: this.config.authorizeURL });
+
+    const clientAuth = this.getClientAuthHeader();
+    if (clientAuth) {
+      req.headers['authorization'] = clientAuth;
+    }
 
     req.headers['content-type'] =
       'application/x-www-form-urlencoded;charset=utf-8';
 
     let config = {
       grantType: 'password',
-      clientId: 'blah',
-      clientSecret: 'foo',
-      scope: 'account'
+      clientId: this.config.clientId,
+      clientSecret: this.config.clientSecret,
+      scope: this.config.scope
     };
 
     let data = {
       username: username,
       password: password,
       grant_type: config.grantType,
-      client_id: config.clientId,
-      client_secret: config.clientSecret,
       scope: config.scope
     };
     req.data = serialize(data);

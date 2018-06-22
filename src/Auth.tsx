@@ -16,6 +16,9 @@ export type AuthContentProps = {
 
 export interface AuthProps {
   oauthTokenURL: string;
+  clientId?: string;
+  clientSecret?: string;
+  scope?: string;
   form: (props: AuthFormProps) => React.ReactNode;
   content: (props: AuthContentProps) => React.ReactNode;
 }
@@ -30,7 +33,10 @@ export class Auth extends React.Component<AuthProps, AuthState> {
   authSession: AuthSession;
 
   auth = new AuthorizationService({
-    authorizeURL: this.props.oauthTokenURL
+    authorizeURL: this.props.oauthTokenURL,
+    clientId: this.props.clientId,
+    clientSecret: this.props.clientSecret,
+    scope: this.props.scope
   });
 
   state = { isAuthorizing: false, authorizationError: null };

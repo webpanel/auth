@@ -12,6 +12,9 @@ export declare type AuthContentProps = {
 };
 export interface AuthProps {
     oauthTokenURL: string;
+    clientId?: string;
+    clientSecret?: string;
+    scope?: string;
     form: (props: AuthFormProps) => React.ReactNode;
     content: (props: AuthContentProps) => React.ReactNode;
 }
