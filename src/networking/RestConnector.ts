@@ -29,7 +29,7 @@ export class RestConnector implements Connector {
       throw new RestConnectorError(
         res.status,
         res,
-        json.error_description || json.error
+        json.error_description || json.error || json.message
       );
     }
 
