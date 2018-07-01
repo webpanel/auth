@@ -24,7 +24,7 @@ export interface AuthProps {
 }
 export interface AuthState {
   isAuthorizing: boolean;
-  authorizationError: Error | null;
+  authorizationError?: Error;
 }
 
 @observer
@@ -39,7 +39,7 @@ export class Auth extends React.Component<AuthProps, AuthState> {
     scope: this.props.scope
   });
 
-  state = { isAuthorizing: false, authorizationError: null };
+  state = { isAuthorizing: false, authorizationError: undefined };
 
   componentWillMount() {
     this.authSession = AuthSession.current();
@@ -50,10 +50,10 @@ export class Auth extends React.Component<AuthProps, AuthState> {
     try {
       let token = await this.auth.authorize(username, password);
       this.authSession.updateAccessToken(token);
+      this.setState({ isAuthorizing: false });
     } catch (authorizationError) {
-      this.setState({ authorizationError });
+      this.setState({ authorizationError, isAuthorizing: false });
     }
-    this.setState({ isAuthorizing: false });
   };
 
   render() {
@@ -68,7 +68,8 @@ export class Auth extends React.Component<AuthProps, AuthState> {
         authorize: async (username: string, password: string) => {
           await this.handleLogin(username, password);
         },
-        isAuthorizing: this.state.isAuthorizing
+        isAuthorizing: this.state.isAuthorizing,
+        authorizationError: this.state.authorizationError
       });
     }
   }

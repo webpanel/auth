@@ -15,14 +15,12 @@
     "mobx": "^5.0.0",
     "mobx-react": "^5.2.0",
     "node-fetch": "^2.1.2",
-    "react": "^16.4.0"
-  },
-  "devDependencies": {
+    "@types/react": "*",
     "@types/jsonwebtoken": "^7.2.7",
     "@types/lodash": "^4.14.109",
     "@types/node": "^10.3.2",
     "@types/node-fetch": "^2.1.1",
-    "@types/react": "^16.3.17"
+    "react": "*"
   },
   "repository": {
     "type": "git",

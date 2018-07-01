@@ -20,7 +20,7 @@ export interface AuthProps {
 }
 export interface AuthState {
     isAuthorizing: boolean;
-    authorizationError: Error | null;
+    authorizationError?: Error;
 }
 export declare class Auth extends React.Component<AuthProps, AuthState> {
     loggedInElement: JSX.Element | null;
@@ -28,7 +28,7 @@ export declare class Auth extends React.Component<AuthProps, AuthState> {
     auth: AuthorizationService;
     state: {
         isAuthorizing: boolean;
-        authorizationError: null;
+        authorizationError: undefined;
     };
     componentWillMount(): void;
     handleLogin: (username: string, password: string) => Promise<void>;
