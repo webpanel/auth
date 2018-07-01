@@ -2,7 +2,10 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 
 import { AuthSession } from './AuthSession';
-import { AuthorizationService } from './AuthorizationService';
+import {
+  AuthorizationService,
+  AuthorizationServiceResponse
+} from './AuthorizationService';
 
 export type AuthFormProps = {
   authorize: (username: string, password: string) => Promise<void>;
@@ -12,6 +15,7 @@ export type AuthFormProps = {
 
 export type AuthContentProps = {
   logout: () => void;
+  userName?: string;
 };
 
 export interface AuthProps {
@@ -21,6 +25,7 @@ export interface AuthProps {
   scope?: string;
   form: (props: AuthFormProps) => React.ReactNode;
   content: (props: AuthContentProps) => React.ReactNode;
+  userNameGetter?: (props: AuthorizationServiceResponse) => string;
 }
 export interface AuthState {
   isAuthorizing: boolean;
@@ -48,8 +53,8 @@ export class Auth extends React.Component<AuthProps, AuthState> {
   handleLogin = async (username: string, password: string) => {
     this.setState({ isAuthorizing: true });
     try {
-      let token = await this.auth.authorize(username, password);
-      this.authSession.updateAccessToken(token);
+      let response = await this.auth.authorize(username, password);
+      this.authSession.update(response);
       this.setState({ isAuthorizing: false });
     } catch (authorizationError) {
       this.setState({ authorizationError, isAuthorizing: false });
@@ -57,11 +62,14 @@ export class Auth extends React.Component<AuthProps, AuthState> {
   };
 
   render() {
-    if (this.authSession.isLogged()) {
+    if (this.authSession.isLogged() && this.authSession.data) {
       return this.props.content({
         logout: () => {
           this.authSession.logout();
-        }
+        },
+        userName:
+          this.props.userNameGetter &&
+          this.props.userNameGetter(this.authSession.data)
       });
     } else {
       return this.props.form({

@@ -1,6 +1,12 @@
 import { Request } from './networking/Request';
 import { RestConnector } from './networking/RestConnector';
 
+export interface AuthorizationServiceResponse {
+  [key: string]: any;
+  access_token: string;
+  refresh_token?: string;
+}
+
 export interface AuthorizationConfig {
   authorizeURL: string;
   tokenURL?: string;
@@ -47,7 +53,10 @@ export class AuthorizationService {
     return undefined;
   }
 
-  async authorize(username: string, password: string): Promise<string> {
+  async authorize(
+    username: string,
+    password: string
+  ): Promise<AuthorizationServiceResponse> {
     let connector = new RestConnector();
 
     let req = new Request({ url: this.config.authorizeURL });
@@ -77,6 +86,6 @@ export class AuthorizationService {
 
     let res = await connector.send(req, 'POST');
     let json = await res.json();
-    return json.access_token;
+    return json;
   }
 }

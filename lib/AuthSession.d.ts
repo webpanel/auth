@@ -1,10 +1,12 @@
+import { AuthorizationServiceResponse } from './AuthorizationService';
 export declare class AuthSession {
     static _shared?: AuthSession;
     accessToken: string | null;
+    data: AuthorizationServiceResponse | null;
     static current(): AuthSession;
-    constructor(accessToken?: string | null);
+    constructor(data?: AuthorizationServiceResponse | null);
     isLogged: () => boolean;
-    updateAccessToken: (accessToken: string) => void;
+    update: (authResponse: AuthorizationServiceResponse) => void;
     logout: () => void;
     getTokenPayload(): any;
 }
