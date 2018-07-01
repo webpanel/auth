@@ -2,10 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 
 import { AuthSession } from './AuthSession';
-import {
-  AuthorizationService,
-  AuthorizationServiceResponse
-} from './AuthorizationService';
+import { AuthorizationService } from './AuthorizationService';
 
 export type AuthFormProps = {
   authorize: (username: string, password: string) => Promise<void>;
@@ -25,7 +22,7 @@ export interface AuthProps {
   scope?: string;
   form: (props: AuthFormProps) => React.ReactNode;
   content: (props: AuthContentProps) => React.ReactNode;
-  userNameGetter?: (props: AuthorizationServiceResponse) => string;
+  userNameGetter?: (session: AuthSession) => string;
 }
 export interface AuthState {
   isAuthorizing: boolean;
@@ -69,7 +66,7 @@ export class Auth extends React.Component<AuthProps, AuthState> {
         },
         userName:
           this.props.userNameGetter &&
-          this.props.userNameGetter(this.authSession.data)
+          this.props.userNameGetter(this.authSession)
       });
     } else {
       return this.props.form({

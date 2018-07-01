@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import * as React from 'react';
 import { AuthSession } from './AuthSession';
-import { AuthorizationService, AuthorizationServiceResponse } from './AuthorizationService';
+import { AuthorizationService } from './AuthorizationService';
 export declare type AuthFormProps = {
     authorize: (username: string, password: string) => Promise<void>;
     isAuthorizing: boolean;
@@ -18,7 +18,7 @@ export interface AuthProps {
     scope?: string;
     form: (props: AuthFormProps) => React.ReactNode;
     content: (props: AuthContentProps) => React.ReactNode;
-    userNameGetter?: (props: AuthorizationServiceResponse) => string;
+    userNameGetter?: (session: AuthSession) => string;
 }
 export interface AuthState {
     isAuthorizing: boolean;

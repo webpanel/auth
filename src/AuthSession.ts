@@ -27,7 +27,6 @@ export class AuthSession {
       this.data = data;
       this.accessToken = data.access_token;
     }
-    console.log('??', this.accessToken, this.data);
     autorun(() => {
       if (this.data === null) {
         localStorage.removeItem(AUTH_SESSION_STORAGE_KEY);
@@ -48,7 +47,6 @@ export class AuthSession {
   update = (authResponse: AuthorizationServiceResponse) => {
     this.accessToken = authResponse.access_token;
     this.data = authResponse;
-    console.log('!!', this.accessToken, this.data);
   };
 
   logout = () => {
