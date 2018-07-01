@@ -9,6 +9,7 @@ export declare type AuthFormProps = {
 };
 export declare type AuthContentProps = {
     logout: () => void;
+    accessToken: string;
     userName?: string;
 };
 export interface AuthProps {

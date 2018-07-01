@@ -12,6 +12,7 @@ export type AuthFormProps = {
 
 export type AuthContentProps = {
   logout: () => void;
+  accessToken: string;
   userName?: string;
 };
 
@@ -64,6 +65,7 @@ export class Auth extends React.Component<AuthProps, AuthState> {
         logout: () => {
           this.authSession.logout();
         },
+        accessToken: this.authSession.data.access_token,
         userName:
           this.props.userNameGetter &&
           this.props.userNameGetter(this.authSession)
