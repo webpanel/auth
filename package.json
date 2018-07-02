@@ -12,8 +12,6 @@
   "dependencies": {
     "jsonwebtoken": "^8.2.2",
     "lodash": "^4.17.10",
-    "mobx": "^5.0.0",
-    "mobx-react": "^5.2.0",
     "node-fetch": "^2.1.2",
     "@types/react": "*",
     "@types/jsonwebtoken": "^7.2.7",
@@ -21,6 +19,14 @@
     "@types/node": "^10.3.2",
     "@types/node-fetch": "^2.1.1",
     "react": "*"
+  },
+  "peerDependencies": {
+    "mobx": "^5.0.0",
+    "mobx-react": "^5.2.0"
+  },
+  "devDependencies": {
+    "mobx": "^5.0.0",
+    "mobx-react": "^5.2.0"
   },
   "repository": {
     "type": "git",
