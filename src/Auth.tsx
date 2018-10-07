@@ -3,26 +3,13 @@ import { observer } from 'mobx-react';
 
 import { AuthSession } from './AuthSession';
 import { AuthorizationService } from './AuthorizationService';
-
-export type AuthFormProps = {
-  authorize: (username: string, password: string) => Promise<void>;
-  isAuthorizing: boolean;
-  authorizationError?: Error;
-};
-
-export type AuthContentProps = {
-  logout: () => void;
-  accessToken: string;
-  userName?: string;
-};
+import { AuthBaseProps } from '.';
 
 export interface AuthProps {
   oauthTokenURL: string;
   clientId?: string;
   clientSecret?: string;
   scope?: string;
-  form: (props: AuthFormProps) => React.ReactNode;
-  content: (props: AuthContentProps) => React.ReactNode;
   userNameGetter?: (session: AuthSession) => string;
 }
 export interface AuthState {
@@ -31,7 +18,10 @@ export interface AuthState {
 }
 
 @observer
-export class Auth extends React.Component<AuthProps, AuthState> {
+export class Auth extends React.Component<
+  AuthBaseProps & AuthProps,
+  AuthState
+> {
   loggedInElement: JSX.Element | null = null;
   authSession: AuthSession;
 

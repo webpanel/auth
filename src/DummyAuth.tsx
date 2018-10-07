@@ -2,19 +2,20 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 
 import { AuthSession } from './AuthSession';
-import { AuthorizationServiceResponse } from './AuthorizationService';
 
-import { AuthFormProps, AuthContentProps, AuthState } from './Auth';
+import { AuthState } from './Auth';
+import { AuthBaseProps } from '.';
 
 export interface DummyAuthProps {
   username: string;
   password: string;
-  form: (props: AuthFormProps) => React.ReactNode;
-  content: (props: AuthContentProps) => React.ReactNode;
 }
 
 @observer
-export class DummyAuth extends React.Component<DummyAuthProps, AuthState> {
+export class DummyAuth extends React.Component<
+  AuthBaseProps & DummyAuthProps,
+  AuthState
+> {
   loggedInElement: JSX.Element | null = null;
   authSession: AuthSession;
 
@@ -50,7 +51,7 @@ export class DummyAuth extends React.Component<DummyAuthProps, AuthState> {
           this.authSession.logout();
         },
         accessToken: this.authSession.data.access_token,
-        userName: 'John Doe'
+        userName: this.props.username
       });
     } else {
       return this.props.form({
