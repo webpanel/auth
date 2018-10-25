@@ -1,4 +1,11 @@
 import { AuthorizationServiceResponse } from './AuthorizationService';
+export interface AccessToken {
+    iat?: number;
+    user?: {
+        permissions?: string;
+        roles?: string[];
+    };
+}
 export declare class AuthSession {
     static _shared?: AuthSession;
     accessToken: string | null;
@@ -8,5 +15,5 @@ export declare class AuthSession {
     isLogged: () => boolean;
     update: (authResponse: AuthorizationServiceResponse) => void;
     logout: () => void;
-    getTokenPayload(): any;
+    getTokenPayload(): AccessToken | null;
 }

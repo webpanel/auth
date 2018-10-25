@@ -4,11 +4,21 @@ import { AuthorizationServiceResponse } from './AuthorizationService';
 
 const AUTH_SESSION_STORAGE_KEY = 'auth_session';
 
+export interface AccessToken {
+  iat?: number;
+  user?: {
+    permissions?: string;
+    roles?: string[];
+  };
+}
+
 export class AuthSession {
   static _shared?: AuthSession;
 
-  @observable accessToken: string | null = null;
-  @observable data: AuthorizationServiceResponse | null = null;
+  @observable
+  accessToken: string | null = null;
+  @observable
+  data: AuthorizationServiceResponse | null = null;
 
   static current(): AuthSession {
     if (typeof this._shared === 'undefined') {
@@ -54,10 +64,10 @@ export class AuthSession {
     this.data = null;
   };
 
-  getTokenPayload(): any {
+  getTokenPayload(): AccessToken | null {
     if (!this.accessToken) {
       return null;
     }
-    return decode(this.accessToken);
+    return decode(this.accessToken) as AccessToken;
   }
 }
