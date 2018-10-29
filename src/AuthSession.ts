@@ -6,7 +6,9 @@ const AUTH_SESSION_STORAGE_KEY = 'auth_session';
 
 export interface AccessToken {
   iat?: number;
+  sub?: string;
   user?: {
+    [key: string]: any;
     permissions?: string;
     roles?: string[];
   };
