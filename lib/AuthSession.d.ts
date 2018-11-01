@@ -1,6 +1,7 @@
 import { AuthorizationServiceResponse } from './AuthorizationService';
 export interface AccessToken {
     iat?: number;
+    sub?: string;
     user?: {
         [key: string]: any;
         permissions?: string;

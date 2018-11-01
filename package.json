@@ -10,14 +10,15 @@
     "patch-release": "npm version patch && git push --follow-tags && npm publish"
   },
   "dependencies": {
-    "jsonwebtoken": "^8.2.2",
-    "lodash": "^4.17.10",
-    "node-fetch": "^2.1.2",
-    "@types/react": "*",
     "@types/jsonwebtoken": "^7.2.7",
     "@types/lodash": "^4.14.109",
     "@types/node": "^10.3.2",
     "@types/node-fetch": "^2.1.1",
+    "@types/react": "*",
+    "acl-permissions": "0.0.8",
+    "jsonwebtoken": "^8.2.2",
+    "lodash": "^4.17.10",
+    "node-fetch": "^2.1.2",
     "react": "*"
   },
   "peerDependencies": {
