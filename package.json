@@ -1,6 +1,6 @@
 {
   "name": "webpanel-auth",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "ORM inspired by Apple's Objective-C CoreData",
   "license": "MIT",
   "main": "lib/index.js",
