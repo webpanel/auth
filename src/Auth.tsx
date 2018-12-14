@@ -6,6 +6,7 @@ import { AuthorizationService } from './AuthorizationService';
 import { AuthBaseProps } from '.';
 
 export interface AuthProps {
+  type: 'oauth';
   oauthTokenURL: string;
   clientId?: string;
   clientSecret?: string;

@@ -3,6 +3,7 @@ import { AuthSession } from './AuthSession';
 import { AuthState } from './Auth';
 import { AuthBaseProps } from '.';
 export interface DummyAuthProps {
+    type: 'dummy';
     username: string;
     password: string;
 }
