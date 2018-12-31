@@ -11,11 +11,11 @@ export const hasRole = (role: string): boolean => {
   return false;
 };
 
-export const hasAccess = (resource: string, strict = false): boolean => {
+export const hasAccess = (resource: string): boolean => {
   const payload = AuthSession.current().getTokenPayload();
   const permissions = payload && payload.user && payload.user.permissions;
   if (permissions) {
-    return checkPermissions(permissions, resource, strict);
+    return checkPermissions(permissions, resource);
   }
   return false;
 };
