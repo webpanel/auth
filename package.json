@@ -15,7 +15,7 @@
     "@types/node": "^10.3.2",
     "@types/node-fetch": "^2.1.1",
     "@types/react": "*",
-    "acl-permissions": "0.0.14",
+    "acl-permissions": "0.0.15",
     "jsonwebtoken": "^8.2.2",
     "lodash": "^4.17.10",
     "node-fetch": "^2.1.2",
