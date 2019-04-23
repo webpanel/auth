@@ -10,11 +10,6 @@
     "patch-release": "npm version patch && git push --follow-tags && npm publish"
   },
   "dependencies": {
-    "@types/jsonwebtoken": "^7.2.7",
-    "@types/lodash": "^4.14.109",
-    "@types/node": "^10.3.2",
-    "@types/node-fetch": "^2.1.1",
-    "@types/react": "*",
     "acl-permissions": "0.0.15",
     "jsonwebtoken": "^8.2.2",
     "lodash": "^4.17.10",
@@ -26,6 +21,11 @@
     "mobx-react": "^5.2.0"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^7.2.7",
+    "@types/lodash": "^4.14.109",
+    "@types/node": "^10.3.2",
+    "@types/node-fetch": "^2.1.1",
+    "@types/react": "*",
     "mobx": "^5.0.0",
     "mobx-react": "^5.2.0"
   },
