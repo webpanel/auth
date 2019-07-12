@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { observer } from 'mobx-react';
 
-import { AuthSession } from './AuthSession';
-
-import { AuthState } from './Auth';
 import { AuthBaseProps } from '.';
+import { AuthSession } from './AuthSession';
+import { AuthState } from './Auth';
+import { observer } from 'mobx-react';
 
 export interface DummyAuthProps {
   type: 'dummy';
@@ -47,7 +46,8 @@ export class DummyAuth extends React.Component<
 
   render() {
     if (this.authSession.isLogged() && this.authSession.data) {
-      return this.props.content({
+      const content = this.props.content || this.props.children;
+      return content({
         logout: () => {
           this.authSession.logout();
         },

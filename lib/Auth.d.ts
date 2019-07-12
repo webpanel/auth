@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { AuthBaseProps } from '.';
 import { AuthSession } from './AuthSession';
 import { AuthorizationService } from './AuthorizationService';
-import { AuthBaseProps } from '.';
 export interface AuthProps {
     type: 'oauth';
     oauthTokenURL: string;

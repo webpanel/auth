@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { observer } from 'mobx-react';
 
+import { AuthBaseProps } from '.';
 import { AuthSession } from './AuthSession';
 import { AuthorizationService } from './AuthorizationService';
-import { AuthBaseProps } from '.';
+import { observer } from 'mobx-react';
 
 export interface AuthProps {
   type: 'oauth';
@@ -52,7 +52,8 @@ export class Auth extends React.Component<
 
   render() {
     if (this.authSession.isLogged() && this.authSession.data) {
-      return this.props.content({
+      const content = this.props.content || this.props.children;
+      return content({
         logout: () => {
           this.authSession.logout();
         },

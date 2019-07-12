@@ -6,7 +6,9 @@ export type AuthFormProps = {
 
 export interface AuthBaseProps {
   form: (props: AuthFormProps) => React.ReactNode;
-  content: (props: AuthContentProps) => React.ReactNode;
+  // deprecated, please use children
+  content?: (props: AuthContentProps) => React.ReactNode;
+  children: (props: AuthContentProps) => React.ReactNode;
 }
 
 export type AuthContentProps = {

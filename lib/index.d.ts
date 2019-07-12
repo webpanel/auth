@@ -6,7 +6,8 @@ export declare type AuthFormProps = {
 };
 export interface AuthBaseProps {
     form: (props: AuthFormProps) => React.ReactNode;
-    content: (props: AuthContentProps) => React.ReactNode;
+    content?: (props: AuthContentProps) => React.ReactNode;
+    children: (props: AuthContentProps) => React.ReactNode;
 }
 export declare type AuthContentProps = {
     logout: () => void;

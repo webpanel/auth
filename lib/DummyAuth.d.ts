@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { AuthBaseProps } from '.';
 import { AuthSession } from './AuthSession';
 import { AuthState } from './Auth';
-import { AuthBaseProps } from '.';
 export interface DummyAuthProps {
     type: 'dummy';
     username: string;
