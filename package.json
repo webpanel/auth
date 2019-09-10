@@ -10,7 +10,7 @@
     "patch-release": "npm version patch && git push --follow-tags && npm publish"
   },
   "dependencies": {
-    "acl-permissions": "^0.1.0",
+    "acl-permissions": "^0.1.1",
     "jsonwebtoken": "^8.2.2",
     "lodash": "^4.17.10",
     "node-fetch": "^2.1.2",
