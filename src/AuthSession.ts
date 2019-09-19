@@ -1,12 +1,15 @@
-import { observable, autorun } from 'mobx';
-import { decode } from 'jsonwebtoken';
+import { autorun, observable } from 'mobx';
+
 import { AuthorizationServiceResponse } from './AuthorizationService';
+import { decode } from 'jsonwebtoken';
 
 const AUTH_SESSION_STORAGE_KEY = 'auth_session';
 
 export interface AccessToken {
   iat?: number;
   sub?: string;
+  scope?: string;
+  // deprecated
   user?: {
     [key: string]: any;
     permissions?: string;
