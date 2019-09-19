@@ -60,6 +60,7 @@ export class AuthSession {
     if (data) {
       this.data = data;
       this.accessToken = data.access_token;
+      this.idToken = data.id_token;
     }
     autorun(() => {
       if (this.data === null) {
@@ -82,6 +83,7 @@ export class AuthSession {
     this.accessToken = authResponse.access_token;
     this.idToken = authResponse.id_token;
     this.accessTokenPayload = undefined;
+    this.idTokenPayload = undefined;
     this.data = authResponse;
   };
 
@@ -89,6 +91,7 @@ export class AuthSession {
     this.accessToken = null;
     this.idToken = null;
     this.accessTokenPayload = undefined;
+    this.idTokenPayload = undefined;
     this.data = null;
   };
 
