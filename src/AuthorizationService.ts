@@ -5,6 +5,7 @@ export interface AuthorizationServiceResponse {
   [key: string]: any;
   access_token: string;
   refresh_token?: string;
+  id_token?: string;
 }
 
 export interface AuthorizationConfig {
