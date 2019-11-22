@@ -1,12 +1,12 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { AuthBaseProps } from '.';
-import { AuthSession } from './AuthSession';
-import { AuthorizationService } from './AuthorizationService';
-import { observer } from 'mobx-react';
+import { AuthBaseProps } from ".";
+import { AuthSession } from "./AuthSession";
+import { AuthorizationService } from "./AuthorizationService";
+import { observer } from "mobx-react";
 
 export interface AuthProps {
-  type: 'oauth';
+  type: "oauth";
   oauthTokenURL: string;
   clientId?: string;
   clientSecret?: string;
@@ -59,8 +59,9 @@ export class Auth extends React.Component<
         },
         accessToken: this.authSession.data.access_token,
         userName:
-          this.props.userNameGetter &&
-          this.props.userNameGetter(this.authSession)
+          (this.props.userNameGetter &&
+            this.props.userNameGetter(this.authSession)) ||
+          this.defaultUsernameGetter(this.authSession)
       });
     } else {
       return this.props.form({
@@ -72,4 +73,9 @@ export class Auth extends React.Component<
       });
     }
   }
+
+  private defaultUsernameGetter = (session: AuthSession) => {
+    const payload = session.getIdTokenPayload();
+    return (payload && (payload.name || payload.email)) || "";
+  };
 }
