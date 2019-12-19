@@ -1,12 +1,12 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { AuthBaseProps } from '.';
-import { AuthSession } from './AuthSession';
-import { AuthState } from './Auth';
-import { observer } from 'mobx-react';
+import { AuthBaseProps } from ".";
+import { AuthSession } from "./AuthSession";
+import { AuthState } from "./Auth";
+import { observer } from "mobx-react";
 
 export interface DummyAuthProps {
-  type: 'dummy';
+  type: "dummy";
   username: string;
   password: string;
 }
@@ -31,12 +31,12 @@ export class DummyAuth extends React.Component<
         username !== this.props.username ||
         password !== this.props.password
       ) {
-        throw new Error('Invalid credentials');
+        throw new Error("Invalid credentials");
       }
 
       let response = {
         access_token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
       };
       this.authSession.update(response);
     } catch (authorizationError) {
@@ -47,13 +47,17 @@ export class DummyAuth extends React.Component<
   render() {
     if (this.authSession.isLogged() && this.authSession.data) {
       const content = this.props.content || this.props.children;
-      return content({
-        logout: () => {
-          this.authSession.logout();
-        },
-        accessToken: this.authSession.data.access_token,
-        userName: this.props.username
-      });
+      return (
+        (content &&
+          content({
+            logout: () => {
+              this.authSession.logout();
+            },
+            accessToken: this.authSession.data.access_token,
+            userName: this.props.username
+          })) ||
+        "no content"
+      );
     } else {
       return this.props.form({
         authorize: async (username: string, password: string) => {

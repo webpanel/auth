@@ -8,7 +8,7 @@ export interface AuthBaseProps {
   form: (props: AuthFormProps) => React.ReactNode;
   // deprecated, please use children
   content?: (props: AuthContentProps) => React.ReactNode;
-  children: (props: AuthContentProps) => React.ReactNode;
+  children?: (props: AuthContentProps) => React.ReactNode;
 }
 
 export type AuthContentProps = {
@@ -17,8 +17,8 @@ export type AuthContentProps = {
   userName?: string;
 };
 
-export { Auth, Auth as OAuth2Auth } from './Auth';
-export { DummyAuth } from './DummyAuth';
-export { AuthSession } from './AuthSession';
+export { Auth, Auth as OAuth2Auth } from "./Auth";
+export { DummyAuth } from "./DummyAuth";
+export { AuthSession } from "./AuthSession";
 
-export { hasAccess, hasRole } from './permissions';
+export { hasAccess, hasRole } from "./permissions";

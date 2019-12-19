@@ -53,16 +53,20 @@ export class Auth extends React.Component<
   render() {
     if (this.authSession.isLogged() && this.authSession.data) {
       const content = this.props.content || this.props.children;
-      return content({
-        logout: () => {
-          this.authSession.logout();
-        },
-        accessToken: this.authSession.data.access_token,
-        userName:
-          (this.props.userNameGetter &&
-            this.props.userNameGetter(this.authSession)) ||
-          this.defaultUsernameGetter(this.authSession)
-      });
+      return (
+        (content &&
+          content({
+            logout: () => {
+              this.authSession.logout();
+            },
+            accessToken: this.authSession.data.access_token,
+            userName:
+              (this.props.userNameGetter &&
+                this.props.userNameGetter(this.authSession)) ||
+              this.defaultUsernameGetter(this.authSession)
+          })) ||
+        "no content"
+      );
     } else {
       return this.props.form({
         authorize: async (username: string, password: string) => {

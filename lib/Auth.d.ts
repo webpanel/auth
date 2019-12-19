@@ -24,6 +24,6 @@ export declare class Auth extends React.Component<AuthBaseProps & AuthProps, Aut
     };
     componentWillMount(): void;
     handleLogin: (username: string, password: string) => Promise<void>;
-    render(): React.ReactNode;
+    render(): {} | null | undefined;
     private defaultUsernameGetter;
 }
