@@ -1,15 +1,24 @@
 import * as React from "react";
 
+import {
+  AuthorizationService,
+  AuthorizationServiceResponse,
+  OAuthGrantType
+} from "./AuthorizationService";
+
 import { AuthBaseProps } from ".";
 import { AuthSession } from "./AuthSession";
-import { AuthorizationService } from "./AuthorizationService";
 import { observer } from "mobx-react";
 
 export interface AuthProps {
   type: "oauth";
-  oauthTokenURL: string;
+  grantType: OAuthGrantType;
+  oauthAuthorizationUri?: string;
+  oauthTokenUri: string;
+  redirectUri?: string;
   clientId?: string;
   clientSecret?: string;
+  audience?: string;
   scope?: string;
   userNameGetter?: (session: AuthSession) => string;
 }
@@ -27,9 +36,13 @@ export class Auth extends React.Component<
   authSession: AuthSession;
 
   auth = new AuthorizationService({
-    authorizeURL: this.props.oauthTokenURL,
+    authorizationUri: this.props.oauthAuthorizationUri,
+    tokenUri: this.props.oauthTokenUri,
+    redirectUri: this.props.redirectUri,
+    grantType: this.props.grantType,
     clientId: this.props.clientId,
     clientSecret: this.props.clientSecret,
+    audience: this.props.audience,
     scope: this.props.scope
   });
 
@@ -37,17 +50,49 @@ export class Auth extends React.Component<
 
   componentWillMount() {
     this.authSession = AuthSession.current();
+    if (this.authSession.isLogged() && this.props.grantType !== "password") {
+      this.authorize();
+    }
   }
 
   handleLogin = async (username: string, password: string) => {
     this.setState({ isAuthorizing: true });
     try {
-      let response = await this.auth.authorize(username, password);
-      this.authSession.update(response);
+      let response = await this.auth.authorizeWithPassword(username, password);
+      this.authSession.update(response.data as AuthorizationServiceResponse);
       this.setState({ isAuthorizing: false });
     } catch (authorizationError) {
       this.setState({ authorizationError, isAuthorizing: false });
     }
+  };
+
+  // private authorizeRequest: WrappedPromiseResult<void> | null = null;
+  // readAuthorize = () => {
+  //   if (this.authorizeRequest === null) {
+  //     global.console.log("creating request");
+  //     this.authorizeRequest = wrapPromise(this.authorize());
+  //   }
+  //   global.console.log("reading request");
+  //   this.authorizeRequest.read();
+  // };
+  authorize = async () => {
+    global.console.log("authorize???");
+    this.setState({ isAuthorizing: true });
+    try {
+      try {
+        const response = await this.auth.authorize();
+        global.console.log("resp!!!!", response);
+        if (response) {
+          this.authSession.update(response);
+        }
+      } catch (e) {
+        global.console.log("failed to fetch code", e);
+      }
+      return new Promise(resolve => setTimeout(resolve, 5000));
+    } catch (authorizationError) {
+      this.setState({ authorizationError, isAuthorizing: false });
+    }
+    this.setState({ isAuthorizing: false });
   };
 
   render() {
@@ -67,7 +112,7 @@ export class Auth extends React.Component<
           })) ||
         "no content"
       );
-    } else {
+    } else if (this.props.grantType === "password") {
       return this.props.form({
         authorize: async (username: string, password: string) => {
           await this.handleLogin(username, password);
@@ -75,6 +120,8 @@ export class Auth extends React.Component<
         isAuthorizing: this.state.isAuthorizing,
         authorizationError: this.state.authorizationError
       });
+    } else {
+      return "...";
     }
   }
 

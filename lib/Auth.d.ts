@@ -1,12 +1,16 @@
 import * as React from "react";
+import { AuthorizationService, OAuthGrantType } from "./AuthorizationService";
 import { AuthBaseProps } from ".";
 import { AuthSession } from "./AuthSession";
-import { AuthorizationService } from "./AuthorizationService";
 export interface AuthProps {
     type: "oauth";
-    oauthTokenURL: string;
+    grantType: OAuthGrantType;
+    oauthAuthorizationUri?: string;
+    oauthTokenUri: string;
+    redirectUri?: string;
     clientId?: string;
     clientSecret?: string;
+    audience?: string;
     scope?: string;
     userNameGetter?: (session: AuthSession) => string;
 }
@@ -24,6 +28,7 @@ export declare class Auth extends React.Component<AuthBaseProps & AuthProps, Aut
     };
     componentWillMount(): void;
     handleLogin: (username: string, password: string) => Promise<void>;
+    authorize: () => Promise<unknown>;
     render(): {} | null | undefined;
     private defaultUsernameGetter;
 }

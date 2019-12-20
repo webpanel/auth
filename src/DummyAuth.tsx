@@ -1,8 +1,10 @@
+import * as ClientOAuth2 from "client-oauth2";
 import * as React from "react";
 
 import { AuthBaseProps } from ".";
 import { AuthSession } from "./AuthSession";
 import { AuthState } from "./Auth";
+import { AuthorizationServiceResponse } from "./AuthorizationService";
 import { observer } from "mobx-react";
 
 export interface DummyAuthProps {
@@ -11,6 +13,14 @@ export interface DummyAuthProps {
   password: string;
 }
 
+const dummyClient = new ClientOAuth2({
+  clientId: "",
+  clientSecret: "",
+  accessTokenUri: "",
+  authorizationUri: "",
+  redirectUri: "",
+  scopes: []
+});
 @observer
 export class DummyAuth extends React.Component<
   AuthBaseProps & DummyAuthProps,
@@ -34,11 +44,15 @@ export class DummyAuth extends React.Component<
         throw new Error("Invalid credentials");
       }
 
-      let response = {
-        access_token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-      };
-      this.authSession.update(response);
+      // Can also just pass the raw `data` object in place of an argument.
+      var token = dummyClient.createToken(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "optional refresh token",
+        "optional token type",
+        { data: "raw user data" }
+      );
+
+      this.authSession.update(token.data as AuthorizationServiceResponse);
     } catch (authorizationError) {
       this.setState({ authorizationError });
     }

@@ -1,9 +1,9 @@
-import { autorun, observable } from 'mobx';
+import { autorun, observable } from "mobx";
 
-import { AuthorizationServiceResponse } from './AuthorizationService';
-import { decode } from 'jsonwebtoken';
+import { AuthorizationServiceResponse } from "./AuthorizationService";
+import { decode } from "jsonwebtoken";
 
-const AUTH_SESSION_STORAGE_KEY = 'auth_session';
+const AUTH_SESSION_STORAGE_KEY = "auth_session";
 
 export interface AccessToken {
   aud?: string; // audience
@@ -45,14 +45,21 @@ export class AuthSession {
   data: AuthorizationServiceResponse | null = null;
 
   static current(): AuthSession {
-    if (typeof this._shared === 'undefined') {
+    global.console.log("_current", this._shared);
+    if (typeof this._shared === "undefined") {
       let data = null;
       try {
         const json = localStorage.getItem(AUTH_SESSION_STORAGE_KEY);
         data = json && JSON.parse(json);
-      } catch (err) {}
+      } catch (err) {
+        console.error("failed to parse local token", err);
+      }
+      global.console.log("????", data);
+
       this._shared = new AuthSession(data);
     }
+    global.console.log("_current2", this._shared);
+
     return this._shared;
   }
 
@@ -62,7 +69,9 @@ export class AuthSession {
       this.accessToken = data.access_token;
       this.idToken = data.id_token;
     }
+    global.console.log("init", this.data, data);
     autorun(() => {
+      global.console.log("storing data", this.data);
       if (this.data === null) {
         localStorage.removeItem(AUTH_SESSION_STORAGE_KEY);
       } else {
@@ -76,6 +85,7 @@ export class AuthSession {
 
   @observable
   isLogged = () => {
+    global.console.log("is logged??", this.accessToken);
     return this.accessToken !== null;
   };
 
@@ -96,7 +106,7 @@ export class AuthSession {
   };
 
   getTokenPayload(): AccessToken | null {
-    if (typeof this.accessTokenPayload === 'undefined') {
+    if (typeof this.accessTokenPayload === "undefined") {
       if (!this.accessToken) {
         return null;
       }
@@ -107,12 +117,12 @@ export class AuthSession {
 
   hasJWTScope(scope: string): boolean {
     const payload = this.getTokenPayload();
-    const scopes = (payload && payload.scope && payload.scope.split(' ')) || [];
+    const scopes = (payload && payload.scope && payload.scope.split(" ")) || [];
     return scopes.indexOf(scope) !== -1;
   }
 
   getIdTokenPayload(): IdToken | null {
-    if (typeof this.idTokenPayload === 'undefined') {
+    if (typeof this.idTokenPayload === "undefined") {
       if (!this.idToken) {
         return null;
       }

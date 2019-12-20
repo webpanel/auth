@@ -1,3 +1,5 @@
+import * as ClientOAuth2 from "client-oauth2";
+export declare type OAuthGrantType = "password" | "authorization_code" | "client_credentials";
 export interface AuthorizationServiceResponse {
     [key: string]: any;
     access_token: string;
@@ -5,15 +7,19 @@ export interface AuthorizationServiceResponse {
     id_token?: string;
 }
 export interface AuthorizationConfig {
-    authorizeURL: string;
-    tokenURL?: string;
+    authorizationUri?: string;
+    tokenUri: string;
+    grantType: OAuthGrantType;
     clientId?: string;
     clientSecret?: string;
+    redirectUri?: string;
+    audience?: string;
     scope?: string;
 }
 export declare class AuthorizationService {
     config: AuthorizationConfig;
     constructor(config: AuthorizationConfig);
-    getClientAuthHeader(): string | undefined;
-    authorize(username: string, password: string): Promise<AuthorizationServiceResponse>;
+    getClient(): ClientOAuth2;
+    authorize(): Promise<AuthorizationServiceResponse | null>;
+    authorizeWithPassword(username: string, password: string): Promise<AuthorizationServiceResponse>;
 }

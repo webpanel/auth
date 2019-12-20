@@ -1,4 +1,4 @@
-import { AuthorizationServiceResponse } from './AuthorizationService';
+import { AuthorizationServiceResponse } from "./AuthorizationService";
 export interface AccessToken {
     aud?: string;
     exp?: number;
