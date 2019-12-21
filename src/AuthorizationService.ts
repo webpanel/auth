@@ -54,7 +54,6 @@ export class AuthorizationService {
     if (grantType === "authorization_code") {
       if (window.location.pathname === "/oauth/callback") {
         const res = await this.getClient().code.getToken(window.location.href);
-        // window.location.href = "/";
         return res.data as AuthorizationServiceResponse;
       } else {
         const uri = this.getClient().code.getUri({

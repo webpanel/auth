@@ -91,8 +91,8 @@ export class Auth extends React.Component<
         if (response) {
           this.authSession.update(response);
         }
-      } catch (e) {
-        global.console.log("failed to fetch code", e);
+      } catch (err) {
+        global.console.log("failed authorize", err);
       }
     } catch (authorizationError) {
       this.setState({ authorizationError, isAuthorizing: false });
@@ -101,6 +101,11 @@ export class Auth extends React.Component<
   };
 
   render() {
+    const { isAuthorizing } = this.state;
+    if (isAuthorizing) {
+      return "...";
+    }
+
     if (this.authSession.isLogged() && this.authSession.data) {
       const content = this.props.content || this.props.children;
       return (
