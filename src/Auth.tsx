@@ -16,6 +16,7 @@ export interface AuthProps {
   oauthAuthorizationUri?: string;
   oauthTokenUri: string;
   redirectUri?: string;
+  logoutUri?: string;
   clientId?: string;
   clientSecret?: string;
   audience?: string;
@@ -39,6 +40,7 @@ export class Auth extends React.Component<
     authorizationUri: this.props.oauthAuthorizationUri,
     tokenUri: this.props.oauthTokenUri,
     redirectUri: this.props.redirectUri,
+    logoutUri: this.props.logoutUri,
     grantType: this.props.grantType,
     clientId: this.props.clientId,
     clientSecret: this.props.clientSecret,
@@ -50,8 +52,10 @@ export class Auth extends React.Component<
 
   componentWillMount() {
     this.authSession = AuthSession.current();
-    if (this.authSession.isLogged() && this.props.grantType !== "password") {
-      this.authorize();
+    if (!this.authSession.isLogged() && this.props.grantType !== "password") {
+      this.authorize().then(() => {
+        window.location.replace("/");
+      });
     }
   }
 
@@ -75,20 +79,21 @@ export class Auth extends React.Component<
   //   global.console.log("reading request");
   //   this.authorizeRequest.read();
   // };
+  logout = async () => {
+    this.authSession.logout();
+    await this.auth.logout();
+  };
   authorize = async () => {
-    global.console.log("authorize???");
     this.setState({ isAuthorizing: true });
     try {
       try {
         const response = await this.auth.authorize();
-        global.console.log("resp!!!!", response);
         if (response) {
           this.authSession.update(response);
         }
       } catch (e) {
         global.console.log("failed to fetch code", e);
       }
-      return new Promise(resolve => setTimeout(resolve, 5000));
     } catch (authorizationError) {
       this.setState({ authorizationError, isAuthorizing: false });
     }
@@ -102,7 +107,7 @@ export class Auth extends React.Component<
         (content &&
           content({
             logout: () => {
-              this.authSession.logout();
+              this.logout();
             },
             accessToken: this.authSession.data.access_token,
             userName:

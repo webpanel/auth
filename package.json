@@ -10,11 +10,13 @@
     "patch-release": "npm version patch && git push --follow-tags && npm publish"
   },
   "dependencies": {
+    "@types/qs": "^6.9.0",
     "acl-permissions": "^0.1.1",
     "client-oauth2": "^4.2.5",
     "jsonwebtoken": "^8.2.2",
     "lodash": "^4.17.10",
     "node-fetch": "^2.1.2",
+    "qs": "^6.9.1",
     "react": "*"
   },
   "peerDependencies": {

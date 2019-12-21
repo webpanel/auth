@@ -8,6 +8,7 @@ export interface AuthProps {
     oauthAuthorizationUri?: string;
     oauthTokenUri: string;
     redirectUri?: string;
+    logoutUri?: string;
     clientId?: string;
     clientSecret?: string;
     audience?: string;
@@ -28,7 +29,8 @@ export declare class Auth extends React.Component<AuthBaseProps & AuthProps, Aut
     };
     componentWillMount(): void;
     handleLogin: (username: string, password: string) => Promise<void>;
-    authorize: () => Promise<unknown>;
+    logout: () => Promise<void>;
+    authorize: () => Promise<void>;
     render(): {} | null | undefined;
     private defaultUsernameGetter;
 }

@@ -45,7 +45,6 @@ export class AuthSession {
   data: AuthorizationServiceResponse | null = null;
 
   static current(): AuthSession {
-    global.console.log("_current", this._shared);
     if (typeof this._shared === "undefined") {
       let data = null;
       try {
@@ -54,11 +53,9 @@ export class AuthSession {
       } catch (err) {
         console.error("failed to parse local token", err);
       }
-      global.console.log("????", data);
 
       this._shared = new AuthSession(data);
     }
-    global.console.log("_current2", this._shared);
 
     return this._shared;
   }
@@ -69,9 +66,7 @@ export class AuthSession {
       this.accessToken = data.access_token;
       this.idToken = data.id_token;
     }
-    global.console.log("init", this.data, data);
     autorun(() => {
-      global.console.log("storing data", this.data);
       if (this.data === null) {
         localStorage.removeItem(AUTH_SESSION_STORAGE_KEY);
       } else {
@@ -85,7 +80,6 @@ export class AuthSession {
 
   @observable
   isLogged = () => {
-    global.console.log("is logged??", this.accessToken);
     return this.accessToken !== null;
   };
 

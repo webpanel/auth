@@ -13,6 +13,7 @@ export interface AuthorizationConfig {
     clientId?: string;
     clientSecret?: string;
     redirectUri?: string;
+    logoutUri?: string;
     audience?: string;
     scope?: string;
 }
@@ -22,4 +23,5 @@ export declare class AuthorizationService {
     getClient(): ClientOAuth2;
     authorize(): Promise<AuthorizationServiceResponse | null>;
     authorizeWithPassword(username: string, password: string): Promise<AuthorizationServiceResponse>;
+    logout(): Promise<void>;
 }

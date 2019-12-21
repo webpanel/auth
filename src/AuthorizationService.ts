@@ -1,4 +1,5 @@
 import * as ClientOAuth2 from "client-oauth2";
+import * as qs from "qs";
 
 // import { Request } from "./networking/Request";
 // import { RestConnector } from "./networking/RestConnector";
@@ -22,9 +23,13 @@ export interface AuthorizationConfig {
   clientId?: string;
   clientSecret?: string;
   redirectUri?: string;
+  logoutUri?: string;
   audience?: string;
   scope?: string;
 }
+
+const delay = <T>(interval: number): Promise<T> =>
+  new Promise(resolver => setTimeout(resolver, interval));
 
 export class AuthorizationService {
   config: AuthorizationConfig;
@@ -46,11 +51,6 @@ export class AuthorizationService {
 
   public async authorize(): Promise<AuthorizationServiceResponse | null> {
     const { grantType, audience, redirectUri } = this.config;
-    global.console.log(
-      "authorizing",
-      this.config.grantType,
-      window.location.pathname
-    );
     if (grantType === "authorization_code") {
       if (window.location.pathname === "/oauth/callback") {
         const res = await this.getClient().code.getToken(window.location.href);
@@ -61,9 +61,8 @@ export class AuthorizationService {
           redirectUri,
           query: audience ? { audience: audience } : undefined
         });
-        global.console.log("redirecting to", uri);
-        window.location.href = uri;
-        return new Promise(resolver => setTimeout(resolver, 10000));
+        window.location.replace(uri);
+        return delay(10000);
       }
     }
     return null;
@@ -75,5 +74,14 @@ export class AuthorizationService {
   ): Promise<AuthorizationServiceResponse> {
     const res = await this.getClient().owner.getToken(username, password);
     return res.data as AuthorizationServiceResponse;
+  }
+
+  async logout(): Promise<void> {
+    const { logoutUri, clientId } = this.config;
+    if (logoutUri) {
+      const params = { returnTo: window.location.origin, client_id: clientId };
+      window.location.replace(logoutUri + "?" + qs.stringify(params));
+      return delay(5000);
+    }
   }
 }
