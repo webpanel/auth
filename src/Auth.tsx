@@ -10,6 +10,12 @@ import {
 import { AuthSession } from "./AuthSession";
 import { observer } from "mobx-react";
 
+export class AuthError extends Error {
+  constructor(message: string, public description?: string) {
+    super(message);
+  }
+}
+
 export interface OAuth2AuthProps extends AuthBaseProps, AuthBaseInputProps {
   type: "oauth";
   grantType: OAuthGrantType;
@@ -23,13 +29,13 @@ export interface OAuth2AuthProps extends AuthBaseProps, AuthBaseInputProps {
   authorizationUri?: string;
   redirectUri?: string;
   logoutUri?: string;
-  processing: () => React.ReactNode;
-  failed: (props: { error: Error; logout: () => void }) => React.ReactNode;
+  processing?: () => React.ReactNode;
+  failed?: (props: { error: AuthError; logout: () => void }) => React.ReactNode;
 }
 
 export interface AuthState {
   isAuthorizing: boolean;
-  authorizationError?: Error;
+  authorizationError?: AuthError;
 }
 
 @observer

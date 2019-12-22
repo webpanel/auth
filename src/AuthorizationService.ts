@@ -1,6 +1,8 @@
 import * as ClientOAuth2 from "client-oauth2";
 import * as qs from "qs";
 
+import { AuthError } from "./Auth";
+
 // import { Request } from "./networking/Request";
 // import { RestConnector } from "./networking/RestConnector";
 
@@ -74,8 +76,8 @@ export class AuthorizationService {
   async handleCallback(): Promise<AuthorizationServiceResponse | null> {
     if (window.location.search) {
       const querystring = qs.parse(window.location.search.substr(1));
-      if (querystring.error || querystring.error_description) {
-        throw new Error(querystring.error_description || querystring.error);
+      if (querystring.error) {
+        throw new AuthError(querystring.error, querystring.error_description);
       }
     }
 

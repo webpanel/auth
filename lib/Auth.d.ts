@@ -2,6 +2,10 @@ import * as React from "react";
 import { AuthBaseInputProps, AuthBaseProps } from ".";
 import { AuthorizationService, OAuthGrantType } from "./AuthorizationService";
 import { AuthSession } from "./AuthSession";
+export declare class AuthError extends Error {
+    description?: string | undefined;
+    constructor(message: string, description?: string | undefined);
+}
 export interface OAuth2AuthProps extends AuthBaseProps, AuthBaseInputProps {
     type: "oauth";
     grantType: OAuthGrantType;
@@ -14,15 +18,15 @@ export interface OAuth2AuthProps extends AuthBaseProps, AuthBaseInputProps {
     authorizationUri?: string;
     redirectUri?: string;
     logoutUri?: string;
-    processing: () => React.ReactNode;
-    failed: (props: {
-        error: Error;
+    processing?: () => React.ReactNode;
+    failed?: (props: {
+        error: AuthError;
         logout: () => void;
     }) => React.ReactNode;
 }
 export interface AuthState {
     isAuthorizing: boolean;
-    authorizationError?: Error;
+    authorizationError?: AuthError;
 }
 export declare class OAuth2Auth extends React.Component<OAuth2AuthProps, AuthState> {
     loggedInElement: JSX.Element | null;
