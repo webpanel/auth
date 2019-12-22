@@ -6,7 +6,7 @@ export declare class AuthError extends Error {
     description?: string | undefined;
     constructor(message: string, description?: string | undefined);
 }
-export interface OAuth2AuthProps extends AuthBaseProps, AuthBaseInputProps {
+export interface OAuth2AuthProps extends AuthBaseProps {
     type: "oauth";
     grantType: OAuthGrantType;
     tokenUri: string;
@@ -28,7 +28,7 @@ export interface AuthState {
     isAuthorizing: boolean;
     authorizationError?: AuthError;
 }
-export declare class OAuth2Auth extends React.Component<OAuth2AuthProps, AuthState> {
+export declare class OAuth2Auth extends React.Component<OAuth2AuthProps & AuthBaseInputProps, AuthState> {
     loggedInElement: JSX.Element | null;
     authSession: AuthSession;
     auth: AuthorizationService;

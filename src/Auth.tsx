@@ -16,7 +16,7 @@ export class AuthError extends Error {
   }
 }
 
-export interface OAuth2AuthProps extends AuthBaseProps, AuthBaseInputProps {
+export interface OAuth2AuthProps extends AuthBaseProps {
   type: "oauth";
   grantType: OAuthGrantType;
   tokenUri: string;
@@ -39,7 +39,10 @@ export interface AuthState {
 }
 
 @observer
-export class OAuth2Auth extends React.Component<OAuth2AuthProps, AuthState> {
+export class OAuth2Auth extends React.Component<
+  OAuth2AuthProps & AuthBaseInputProps,
+  AuthState
+> {
   loggedInElement: JSX.Element | null = null;
   authSession: AuthSession;
 
