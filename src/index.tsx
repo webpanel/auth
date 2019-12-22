@@ -1,3 +1,6 @@
+import { DummyAuthProps } from "./DummyAuth";
+import { OAuth2AuthProps } from "./Auth";
+
 export type AuthFormProps = {
   authorize: (username: string, password: string) => Promise<void>;
   isAuthorizing: boolean;
@@ -26,3 +29,5 @@ export { DummyAuth } from "./DummyAuth";
 export { AuthSession } from "./AuthSession";
 
 export { hasAccess, hasRole } from "./permissions";
+
+export type AuthProps = OAuth2AuthProps | DummyAuthProps;

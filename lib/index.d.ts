@@ -1,4 +1,6 @@
 /// <reference types="react" />
+import { DummyAuthProps } from "./DummyAuth";
+import { OAuth2AuthProps } from "./Auth";
 export declare type AuthFormProps = {
     authorize: (username: string, password: string) => Promise<void>;
     isAuthorizing: boolean;
@@ -20,3 +22,4 @@ export { OAuth2Auth as Auth, OAuth2Auth } from "./Auth";
 export { DummyAuth } from "./DummyAuth";
 export { AuthSession } from "./AuthSession";
 export { hasAccess, hasRole } from "./permissions";
+export declare type AuthProps = OAuth2AuthProps | DummyAuthProps;
