@@ -53,8 +53,7 @@ export class AuthorizationService {
     const { grantType, audience, redirectUri } = this.config;
     if (grantType === "authorization_code") {
       if (window.location.pathname === "/oauth/callback") {
-        const res = await this.getClient().code.getToken(window.location.href);
-        return res.data as AuthorizationServiceResponse;
+        return this.handleCallback();
       } else {
         const uri = this.getClient().code.getUri({
           redirectUri,
@@ -72,6 +71,18 @@ export class AuthorizationService {
     password: string
   ): Promise<AuthorizationServiceResponse> {
     const res = await this.getClient().owner.getToken(username, password);
+    return res.data as AuthorizationServiceResponse;
+  }
+
+  async handleCallback(): Promise<AuthorizationServiceResponse | null> {
+    if (window.location.search) {
+      const querystring = qs.parse(window.location.search.substr(1));
+      if (querystring.error || querystring.error_description) {
+        throw new Error(querystring.error_description || querystring.error);
+      }
+    }
+
+    const res = await this.getClient().code.getToken(window.location.href);
     return res.data as AuthorizationServiceResponse;
   }
 

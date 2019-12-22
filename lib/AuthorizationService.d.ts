@@ -23,5 +23,6 @@ export declare class AuthorizationService {
     getClient(): ClientOAuth2;
     authorize(): Promise<AuthorizationServiceResponse | null>;
     authorizeWithPassword(username: string, password: string): Promise<AuthorizationServiceResponse>;
+    handleCallback(): Promise<AuthorizationServiceResponse | null>;
     logout(): Promise<void>;
 }

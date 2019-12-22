@@ -23,10 +23,7 @@ export declare class Auth extends React.Component<AuthBaseProps & AuthProps, Aut
     loggedInElement: JSX.Element | null;
     authSession: AuthSession;
     auth: AuthorizationService;
-    state: {
-        isAuthorizing: boolean;
-        authorizationError: undefined;
-    };
+    state: AuthState;
     componentWillMount(): void;
     handleLogin: (username: string, password: string) => Promise<void>;
     logout: () => Promise<void>;

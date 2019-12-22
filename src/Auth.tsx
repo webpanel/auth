@@ -48,14 +48,12 @@ export class Auth extends React.Component<
     scope: this.props.scope
   });
 
-  state = { isAuthorizing: false, authorizationError: undefined };
+  state: AuthState = { isAuthorizing: false, authorizationError: undefined };
 
   componentWillMount() {
     this.authSession = AuthSession.current();
     if (!this.authSession.isLogged() && this.props.grantType !== "password") {
-      this.authorize().then(() => {
-        window.location.replace("/");
-      });
+      this.authorize();
     }
   }
 
@@ -86,24 +84,32 @@ export class Auth extends React.Component<
   authorize = async () => {
     this.setState({ isAuthorizing: true });
     try {
-      try {
-        const response = await this.auth.authorize();
-        if (response) {
-          this.authSession.update(response);
-        }
-      } catch (err) {
-        global.console.log("failed authorize", err);
+      const response = await this.auth.authorize();
+      if (response) {
+        this.authSession.update(response);
       }
+      window.location.replace("/");
+      // this.setState({ isAuthorizing: false });
     } catch (authorizationError) {
       this.setState({ authorizationError, isAuthorizing: false });
+      throw authorizationError;
     }
-    this.setState({ isAuthorizing: false });
   };
 
   render() {
-    const { isAuthorizing } = this.state;
+    const { isAuthorizing, authorizationError } = this.state;
     if (isAuthorizing) {
       return "...";
+    }
+    if (authorizationError) {
+      return (
+        <>
+          Failed {authorizationError.message}{" "}
+          <a href="#" onClick={() => this.logout()}>
+            Logout
+          </a>
+        </>
+      );
     }
 
     if (this.authSession.isLogged() && this.authSession.data) {
