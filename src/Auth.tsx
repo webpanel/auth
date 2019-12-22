@@ -1,46 +1,67 @@
 import * as React from "react";
 
+import { AuthBaseInputProps, AuthBaseProps } from ".";
 import {
   AuthorizationService,
   AuthorizationServiceResponse,
   OAuthGrantType
 } from "./AuthorizationService";
 
-import { AuthBaseProps } from ".";
 import { AuthSession } from "./AuthSession";
 import { observer } from "mobx-react";
 
-export interface AuthProps {
+export interface OAuth2AuthProps extends AuthBaseProps {
   type: "oauth";
   grantType: OAuthGrantType;
-  oauthAuthorizationUri?: string;
-  oauthTokenUri: string;
-  redirectUri?: string;
-  logoutUri?: string;
+  tokenUri: string;
   clientId?: string;
   clientSecret?: string;
   audience?: string;
   scope?: string;
   userNameGetter?: (session: AuthSession) => string;
 }
+
+export interface OAuth2PasswordProps
+  extends OAuth2AuthProps,
+    AuthBaseInputProps {
+  grantType: "password";
+}
+export interface OAuth2AuthorizationCodeProps extends OAuth2AuthProps {
+  grantType: "authorization_code";
+  authorizationUri: string;
+  redirectUri: string;
+  logoutUri: string;
+  processing: () => React.ReactNode;
+  failed: (props: { logout: () => void }) => React.ReactNode;
+}
+
 export interface AuthState {
   isAuthorizing: boolean;
   authorizationError?: Error;
 }
 
 @observer
-export class Auth extends React.Component<
-  AuthBaseProps & AuthProps,
+export class OAuth2Auth extends React.Component<
+  OAuth2PasswordProps | OAuth2AuthorizationCodeProps,
   AuthState
 > {
   loggedInElement: JSX.Element | null = null;
   authSession: AuthSession;
 
   auth = new AuthorizationService({
-    authorizationUri: this.props.oauthAuthorizationUri,
-    tokenUri: this.props.oauthTokenUri,
-    redirectUri: this.props.redirectUri,
-    logoutUri: this.props.logoutUri,
+    authorizationUri:
+      this.props.grantType === "authorization_code"
+        ? this.props.authorizationUri
+        : undefined,
+    tokenUri: this.props.tokenUri,
+    redirectUri:
+      this.props.grantType === "authorization_code"
+        ? this.props.redirectUri
+        : undefined,
+    logoutUri:
+      this.props.grantType === "authorization_code"
+        ? this.props.logoutUri
+        : undefined,
     grantType: this.props.grantType,
     clientId: this.props.clientId,
     clientSecret: this.props.clientSecret,
@@ -51,9 +72,30 @@ export class Auth extends React.Component<
   state: AuthState = { isAuthorizing: false, authorizationError: undefined };
 
   componentWillMount() {
+    this.validateAttributes();
     this.authSession = AuthSession.current();
     if (!this.authSession.isLogged() && this.props.grantType !== "password") {
       this.authorize();
+    }
+  }
+
+  private validateAttributes() {
+    const { grantType, clientId, clientSecret, tokenUri } = this.props;
+    const assertNotEmpty = (value: string | undefined, name: string) => {
+      if (typeof value === "string") {
+        return;
+      }
+      throw new Error(
+        `attribute ${name} should not be empty for grantType ${grantType}`
+      );
+    };
+
+    assertNotEmpty(clientId, "clientId");
+    assertNotEmpty(clientSecret, "clientSecret");
+    assertNotEmpty(tokenUri, "tokenUri");
+
+    if (this.props.grantType === "authorization_code") {
+      assertNotEmpty(this.props.authorizationUri, "authorizationUri");
     }
   }
 
@@ -68,19 +110,11 @@ export class Auth extends React.Component<
     }
   };
 
-  // private authorizeRequest: WrappedPromiseResult<void> | null = null;
-  // readAuthorize = () => {
-  //   if (this.authorizeRequest === null) {
-  //     global.console.log("creating request");
-  //     this.authorizeRequest = wrapPromise(this.authorize());
-  //   }
-  //   global.console.log("reading request");
-  //   this.authorizeRequest.read();
-  // };
   logout = async () => {
     this.authSession.logout();
     await this.auth.logout();
   };
+
   authorize = async () => {
     this.setState({ isAuthorizing: true });
     try {
@@ -89,7 +123,7 @@ export class Auth extends React.Component<
         this.authSession.update(response);
       }
       window.location.replace("/");
-      // this.setState({ isAuthorizing: false });
+      // no need to update state as we redirect to root page ... this.setState({ isAuthorizing: false });
     } catch (authorizationError) {
       this.setState({ authorizationError, isAuthorizing: false });
       throw authorizationError;
@@ -98,19 +132,6 @@ export class Auth extends React.Component<
 
   render() {
     const { isAuthorizing, authorizationError } = this.state;
-    if (isAuthorizing) {
-      return "...";
-    }
-    if (authorizationError) {
-      return (
-        <>
-          Failed {authorizationError.message}{" "}
-          <a href="#" onClick={() => this.logout()}>
-            Logout
-          </a>
-        </>
-      );
-    }
 
     if (this.authSession.isLogged() && this.authSession.data) {
       const content = this.props.content || this.props.children;
@@ -137,6 +158,22 @@ export class Auth extends React.Component<
         authorizationError: this.state.authorizationError
       });
     } else {
+      const { processing, failed } = this.props;
+      if (isAuthorizing) {
+        return processing ? processing() : "...";
+      }
+      if (authorizationError) {
+        return failed ? (
+          failed({ logout: () => this.logout() })
+        ) : (
+          <>
+            Failed {authorizationError.message}{" "}
+            <a href="#" onClick={() => this.logout()}>
+              Logout
+            </a>
+          </>
+        );
+      }
       return "...";
     }
   }

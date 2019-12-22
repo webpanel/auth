@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AuthBaseProps } from ".";
+import { AuthBaseInputProps, AuthBaseProps } from ".";
 import { AuthSession } from "./AuthSession";
 import { AuthState } from "./Auth";
 export interface DummyAuthProps {
@@ -7,7 +7,7 @@ export interface DummyAuthProps {
     username: string;
     password: string;
 }
-export declare class DummyAuth extends React.Component<AuthBaseProps & DummyAuthProps, AuthState> {
+export declare class DummyAuth extends React.Component<AuthBaseProps & DummyAuthProps & AuthBaseInputProps, AuthState> {
     loggedInElement: JSX.Element | null;
     authSession: AuthSession;
     state: {

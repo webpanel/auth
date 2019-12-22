@@ -4,10 +4,7 @@ import * as qs from "qs";
 // import { Request } from "./networking/Request";
 // import { RestConnector } from "./networking/RestConnector";
 
-export type OAuthGrantType =
-  | "password"
-  | "authorization_code"
-  | "client_credentials";
+export type OAuthGrantType = "password" | "authorization_code";
 
 export interface AuthorizationServiceResponse {
   [key: string]: any;

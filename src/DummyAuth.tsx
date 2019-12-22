@@ -1,7 +1,8 @@
 import * as ClientOAuth2 from "client-oauth2";
 import * as React from "react";
 
-import { AuthBaseProps } from ".";
+import { AuthBaseInputProps, AuthBaseProps } from ".";
+
 import { AuthSession } from "./AuthSession";
 import { AuthState } from "./Auth";
 import { AuthorizationServiceResponse } from "./AuthorizationService";
@@ -23,7 +24,7 @@ const dummyClient = new ClientOAuth2({
 });
 @observer
 export class DummyAuth extends React.Component<
-  AuthBaseProps & DummyAuthProps,
+  AuthBaseProps & DummyAuthProps & AuthBaseInputProps,
   AuthState
 > {
   loggedInElement: JSX.Element | null = null;
