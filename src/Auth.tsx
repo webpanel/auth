@@ -3,32 +3,26 @@ import * as React from "react";
 import { AuthBaseInputProps, AuthBaseProps } from ".";
 import {
   AuthorizationService,
-  AuthorizationServiceResponse
+  AuthorizationServiceResponse,
+  OAuthGrantType
 } from "./AuthorizationService";
 
 import { AuthSession } from "./AuthSession";
 import { observer } from "mobx-react";
 
-export interface OAuth2AuthProps extends AuthBaseProps {
+export interface OAuth2AuthProps extends AuthBaseProps, AuthBaseInputProps {
   type: "oauth";
+  grantType: OAuthGrantType;
   tokenUri: string;
   clientId?: string;
   clientSecret?: string;
   audience?: string;
   scope?: string;
   userNameGetter?: (session: AuthSession) => string;
-}
-
-export interface OAuth2PasswordProps
-  extends OAuth2AuthProps,
-    AuthBaseInputProps {
-  grantType: "password";
-}
-export interface OAuth2AuthorizationCodeProps extends OAuth2AuthProps {
-  grantType: "authorization_code";
-  authorizationUri: string;
-  redirectUri: string;
-  logoutUri: string;
+  // authorization_code
+  authorizationUri?: string;
+  redirectUri?: string;
+  logoutUri?: string;
   processing: () => React.ReactNode;
   failed: (props: { logout: () => void }) => React.ReactNode;
 }
@@ -39,10 +33,7 @@ export interface AuthState {
 }
 
 @observer
-export class OAuth2Auth extends React.Component<
-  OAuth2PasswordProps | OAuth2AuthorizationCodeProps,
-  AuthState
-> {
+export class OAuth2Auth extends React.Component<OAuth2AuthProps, AuthState> {
   loggedInElement: JSX.Element | null = null;
   authSession: AuthSession;
 
