@@ -127,7 +127,6 @@ export class OAuth2Auth extends React.Component<
       // no need to update state as we redirect to root page ... this.setState({ isAuthorizing: false });
     } catch (authorizationError) {
       this.setState({ authorizationError, isAuthorizing: false });
-      throw authorizationError;
     }
   };
 
