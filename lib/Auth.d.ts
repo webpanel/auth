@@ -16,6 +16,7 @@ export interface OAuth2AuthProps extends AuthBaseProps, AuthBaseInputProps {
     logoutUri?: string;
     processing: () => React.ReactNode;
     failed: (props: {
+        error: Error;
         logout: () => void;
     }) => React.ReactNode;
 }

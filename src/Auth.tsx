@@ -24,7 +24,7 @@ export interface OAuth2AuthProps extends AuthBaseProps, AuthBaseInputProps {
   redirectUri?: string;
   logoutUri?: string;
   processing: () => React.ReactNode;
-  failed: (props: { logout: () => void }) => React.ReactNode;
+  failed: (props: { error: Error; logout: () => void }) => React.ReactNode;
 }
 
 export interface AuthState {
@@ -153,7 +153,7 @@ export class OAuth2Auth extends React.Component<OAuth2AuthProps, AuthState> {
       }
       if (authorizationError) {
         return failed ? (
-          failed({ logout: () => this.logout() })
+          failed({ logout: () => this.logout(), error: authorizationError })
         ) : (
           <>
             Failed {authorizationError.message}{" "}
