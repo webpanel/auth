@@ -3,8 +3,7 @@ import * as React from "react";
 import { AuthBaseInputProps, AuthBaseProps } from ".";
 import {
   AuthorizationService,
-  AuthorizationServiceResponse,
-  OAuthGrantType
+  AuthorizationServiceResponse
 } from "./AuthorizationService";
 
 import { AuthSession } from "./AuthSession";
@@ -12,7 +11,6 @@ import { observer } from "mobx-react";
 
 export interface OAuth2AuthProps extends AuthBaseProps {
   type: "oauth";
-  grantType: OAuthGrantType;
   tokenUri: string;
   clientId?: string;
   clientSecret?: string;
