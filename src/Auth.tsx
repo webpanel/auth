@@ -133,7 +133,11 @@ export class OAuth2Auth extends React.Component<
   render() {
     const { isAuthorizing, authorizationError } = this.state;
 
-    if (this.authSession.isLogged() && this.authSession.data) {
+    if (
+      !isAuthorizing &&
+      this.authSession.isLogged() &&
+      this.authSession.data
+    ) {
       const content = this.props.content || this.props.children;
       return (
         (content &&
@@ -167,7 +171,7 @@ export class OAuth2Auth extends React.Component<
           failed({ logout: () => this.logout(), error: authorizationError })
         ) : (
           <>
-            Failed {authorizationError.message}{" "}
+            Failed {authorizationError.message}
             <a href="#" onClick={() => this.logout()}>
               Logout
             </a>
