@@ -25,4 +25,6 @@ export declare class AuthorizationService {
     authorizeWithPassword(username: string, password: string): Promise<AuthorizationServiceResponse>;
     handleCallback(): Promise<AuthorizationServiceResponse | null>;
     logout(): Promise<void>;
+    private getRedirectUri;
+    private isRedirectUri;
 }

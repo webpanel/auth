@@ -42,20 +42,21 @@ export class AuthorizationService {
       clientSecret: this.config.clientSecret,
       accessTokenUri: this.config.tokenUri,
       authorizationUri: this.config.authorizationUri,
-      redirectUri: this.config.redirectUri,
+      redirectUri: this.getRedirectUri(),
       scopes: this.config.scope ? this.config.scope.split(" ") : []
     });
     return client;
   }
 
   public async authorize(): Promise<AuthorizationServiceResponse | null> {
-    const { grantType, audience, redirectUri } = this.config;
+    const { grantType, audience } = this.config;
+
     if (grantType === "authorization_code") {
-      if (window.location.pathname === "/oauth/callback") {
+      if (this.isRedirectUri(window.location)) {
         return this.handleCallback();
       } else {
         const uri = this.getClient().code.getUri({
-          redirectUri,
+          redirectUri: this.getRedirectUri(),
           query: audience ? { audience: audience } : undefined
         });
         window.location.replace(uri);
@@ -92,5 +93,13 @@ export class AuthorizationService {
       window.location.replace(logoutUri + "?" + qs.stringify(params));
       return delay(5000);
     }
+  }
+
+  private getRedirectUri(): string {
+    const { redirectUri } = this.config;
+    return redirectUri || `${window.location.origin}/oauth/callback`;
+  }
+  private isRedirectUri(loc: Location): boolean {
+    return window.location.pathname == "/oauth/callback";
   }
 }
