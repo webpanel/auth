@@ -17,7 +17,8 @@
     "lodash": "^4.17.10",
     "node-fetch": "^2.1.2",
     "qs": "^6.9.1",
-    "react": "*"
+    "react": "*",
+    "url-parse": "^1.4.7"
   },
   "peerDependencies": {
     "mobx": "^5.0.0",
@@ -29,6 +30,7 @@
     "@types/node": "^12.12.21",
     "@types/node-fetch": "^2.1.1",
     "@types/react": "*",
+    "@types/url-parse": "^1.4.3",
     "mobx": "^5.0.0",
     "mobx-react": "^5.2.0"
   },

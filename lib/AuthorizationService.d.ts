@@ -26,5 +26,6 @@ export declare class AuthorizationService {
     handleCallback(): Promise<AuthorizationServiceResponse | null>;
     logout(): Promise<void>;
     private getRedirectUri;
+    private getLogoutUri;
     private isRedirectUri;
 }

@@ -1,4 +1,5 @@
 import * as ClientOAuth2 from "client-oauth2";
+import * as URL from "url-parse";
 import * as qs from "qs";
 
 import { AuthError } from "./Auth";
@@ -87,10 +88,9 @@ export class AuthorizationService {
   }
 
   async logout(): Promise<void> {
-    const { logoutUri, clientId } = this.config;
+    const logoutUri = this.getLogoutUri();
     if (logoutUri) {
-      const params = { returnTo: window.location.origin, client_id: clientId };
-      window.location.replace(logoutUri + "?" + qs.stringify(params));
+      window.location.replace(logoutUri);
       return delay(5000);
     }
   }
@@ -98,6 +98,18 @@ export class AuthorizationService {
   private getRedirectUri(): string {
     const { redirectUri } = this.config;
     return redirectUri || `${window.location.origin}/oauth/callback`;
+  }
+  private getLogoutUri(): string | null {
+    const { logoutUri, clientId } = this.config;
+    if (logoutUri) {
+      const parsedUrl = new URL(logoutUri, true);
+      if (!parsedUrl.query.client_id) {
+        parsedUrl.query.client_id = clientId;
+        parsedUrl.query.returnTo = window.location.origin;
+      }
+      return parsedUrl.toString();
+    }
+    return null;
   }
   private isRedirectUri(loc: Location): boolean {
     return window.location.pathname == "/oauth/callback";
