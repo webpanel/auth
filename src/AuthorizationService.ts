@@ -72,6 +72,7 @@ export class AuthorizationService {
     password: string
   ): Promise<AuthorizationServiceResponse> {
     const res = await this.getClient().owner.getToken(username, password);
+    global.console.log("???", res);
     return res.data as AuthorizationServiceResponse;
   }
 

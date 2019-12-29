@@ -1,11 +1,7 @@
 import * as React from "react";
 
 import { AuthBaseInputProps, AuthBaseProps } from ".";
-import {
-  AuthorizationService,
-  AuthorizationServiceResponse,
-  OAuthGrantType
-} from "./AuthorizationService";
+import { AuthorizationService, OAuthGrantType } from "./AuthorizationService";
 
 import { AuthSession } from "./AuthSession";
 import { observer } from "mobx-react";
@@ -104,7 +100,7 @@ export class OAuth2Auth extends React.Component<
     this.setState({ isAuthorizing: true });
     try {
       let response = await this.auth.authorizeWithPassword(username, password);
-      this.authSession.update(response.data as AuthorizationServiceResponse);
+      this.authSession.update(response);
       this.setState({ isAuthorizing: false });
     } catch (authorizationError) {
       this.setState({ authorizationError, isAuthorizing: false });
