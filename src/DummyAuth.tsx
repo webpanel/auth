@@ -1,20 +1,30 @@
-import * as React from 'react';
-import { observer } from 'mobx-react';
+import * as ClientOAuth2 from "client-oauth2";
+import * as React from "react";
 
-import { AuthSession } from './AuthSession';
+import { AuthBaseInputProps, AuthBaseProps } from ".";
 
-import { AuthState } from './Auth';
-import { AuthBaseProps } from '.';
+import { AuthSession } from "./AuthSession";
+import { AuthState } from "./Auth";
+import { AuthorizationServiceResponse } from "./AuthorizationService";
+import { observer } from "mobx-react";
 
 export interface DummyAuthProps {
-  type: 'dummy';
+  type: "dummy";
   username: string;
   password: string;
 }
 
+const dummyClient = new ClientOAuth2({
+  clientId: "",
+  clientSecret: "",
+  accessTokenUri: "",
+  authorizationUri: "",
+  redirectUri: "",
+  scopes: []
+});
 @observer
 export class DummyAuth extends React.Component<
-  AuthBaseProps & DummyAuthProps,
+  AuthBaseProps & DummyAuthProps & AuthBaseInputProps,
   AuthState
 > {
   loggedInElement: JSX.Element | null = null;
@@ -32,14 +42,18 @@ export class DummyAuth extends React.Component<
         username !== this.props.username ||
         password !== this.props.password
       ) {
-        throw new Error('Invalid credentials');
+        throw new Error("Invalid credentials");
       }
 
-      let response = {
-        access_token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
-      };
-      this.authSession.update(response);
+      // Can also just pass the raw `data` object in place of an argument.
+      var token = dummyClient.createToken(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "optional refresh token",
+        "optional token type",
+        { data: "raw user data" }
+      );
+
+      this.authSession.update(token.data as AuthorizationServiceResponse);
     } catch (authorizationError) {
       this.setState({ authorizationError });
     }
@@ -47,13 +61,18 @@ export class DummyAuth extends React.Component<
 
   render() {
     if (this.authSession.isLogged() && this.authSession.data) {
-      return this.props.content({
-        logout: () => {
-          this.authSession.logout();
-        },
-        accessToken: this.authSession.data.access_token,
-        userName: this.props.username
-      });
+      const content = this.props.content || this.props.children;
+      return (
+        (content &&
+          content({
+            logout: () => {
+              this.authSession.logout();
+            },
+            accessToken: this.authSession.data.access_token,
+            userName: this.props.username
+          })) ||
+        "no content"
+      );
     } else {
       return this.props.form({
         authorize: async (username: string, password: string) => {

@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { AuthSession } from './AuthSession';
-import { AuthState } from './Auth';
-import { AuthBaseProps } from '.';
+import * as React from "react";
+import { AuthBaseInputProps, AuthBaseProps } from ".";
+import { AuthSession } from "./AuthSession";
+import { AuthState } from "./Auth";
 export interface DummyAuthProps {
-    type: 'dummy';
+    type: "dummy";
     username: string;
     password: string;
 }
-export declare class DummyAuth extends React.Component<AuthBaseProps & DummyAuthProps, AuthState> {
+export declare class DummyAuth extends React.Component<AuthBaseProps & DummyAuthProps & AuthBaseInputProps, AuthState> {
     loggedInElement: JSX.Element | null;
     authSession: AuthSession;
     state: {
@@ -16,5 +16,5 @@ export declare class DummyAuth extends React.Component<AuthBaseProps & DummyAuth
     };
     componentWillMount(): void;
     handleLogin: (username: string, password: string) => Promise<void>;
-    render(): React.ReactNode;
+    render(): {} | null | undefined;
 }

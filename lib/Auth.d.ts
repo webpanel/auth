@@ -1,28 +1,45 @@
-import * as React from 'react';
-import { AuthSession } from './AuthSession';
-import { AuthorizationService } from './AuthorizationService';
-import { AuthBaseProps } from '.';
-export interface AuthProps {
-    type: 'oauth';
-    oauthTokenURL: string;
+import * as React from "react";
+import { AuthBaseInputProps, AuthBaseProps } from ".";
+import { AuthorizationService, OAuthGrantType } from "./AuthorizationService";
+import { AuthSession } from "./AuthSession";
+export declare class AuthError extends Error {
+    description?: string | undefined;
+    constructor(message: string, description?: string | undefined);
+}
+export interface OAuth2AuthProps extends AuthBaseProps {
+    type: "oauth";
+    grantType: OAuthGrantType;
+    tokenUri: string;
     clientId?: string;
     clientSecret?: string;
+    audience?: string;
     scope?: string;
     userNameGetter?: (session: AuthSession) => string;
+    authorizationUri?: string;
+    redirectUri?: string;
+    logoutUri?: string;
+}
+export interface OAuth2AuthComponentProps {
+    processing: () => React.ReactNode;
+    failed: (props: {
+        error: AuthError;
+        logout: () => void;
+    }) => React.ReactNode;
 }
 export interface AuthState {
     isAuthorizing: boolean;
-    authorizationError?: Error;
+    authorizationError?: AuthError;
 }
-export declare class Auth extends React.Component<AuthBaseProps & AuthProps, AuthState> {
+export declare class OAuth2Auth extends React.Component<OAuth2AuthProps & AuthBaseInputProps & OAuth2AuthComponentProps, AuthState> {
     loggedInElement: JSX.Element | null;
     authSession: AuthSession;
     auth: AuthorizationService;
-    state: {
-        isAuthorizing: boolean;
-        authorizationError: undefined;
-    };
+    state: AuthState;
     componentWillMount(): void;
+    private validateAttributes;
     handleLogin: (username: string, password: string) => Promise<void>;
-    render(): React.ReactNode;
+    logout: () => Promise<void>;
+    authorize: () => Promise<void>;
+    render(): {} | null | undefined;
+    private defaultUsernameGetter;
 }

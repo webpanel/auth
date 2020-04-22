@@ -1,6 +1,5 @@
-import { checkPermissions } from 'acl-permissions';
-
 import { AuthSession } from './AuthSession';
+import { PermissionList } from 'acl-permissions';
 
 export const hasRole = (role: string): boolean => {
   const payload = AuthSession.current().getTokenPayload();
@@ -15,7 +14,8 @@ export const hasAccess = (resource: string): boolean => {
   const payload = AuthSession.current().getTokenPayload();
   const permissions = payload && payload.user && payload.user.permissions;
   if (permissions) {
-    return checkPermissions(permissions, resource);
+    const acl = new PermissionList(permissions);
+    return acl.isAllowed(resource);
   }
   return false;
 };

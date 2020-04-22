@@ -1,19 +1,28 @@
 /// <reference types="react" />
+import { AuthSession } from "./AuthSession";
+import { DummyAuthProps } from "./DummyAuth";
+import { OAuth2AuthProps } from "./Auth";
 export declare type AuthFormProps = {
     authorize: (username: string, password: string) => Promise<void>;
     isAuthorizing: boolean;
     authorizationError?: Error;
 };
 export interface AuthBaseProps {
+    children?: (props: AuthContentProps) => React.ReactNode;
+    content?: (props: AuthContentProps) => React.ReactNode;
+    onAuthorize?: (session: AuthSession) => void;
+    onLogout?: () => void;
+}
+export interface AuthBaseInputProps {
     form: (props: AuthFormProps) => React.ReactNode;
-    content: (props: AuthContentProps) => React.ReactNode;
 }
 export declare type AuthContentProps = {
     logout: () => void;
     accessToken: string;
     userName?: string;
 };
-export { Auth, Auth as OAuth2Auth } from './Auth';
-export { DummyAuth } from './DummyAuth';
-export { AuthSession } from './AuthSession';
-export { hasAccess, hasRole } from './permissions';
+export { OAuth2Auth as Auth, OAuth2Auth } from "./Auth";
+export { DummyAuth } from "./DummyAuth";
+export { AuthSession } from "./AuthSession";
+export { hasAccess, hasRole } from "./permissions";
+export declare type AuthProps = OAuth2AuthProps | DummyAuthProps;
