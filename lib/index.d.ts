@@ -1,4 +1,5 @@
 /// <reference types="react" />
+import { AuthSession } from "./AuthSession";
 import { DummyAuthProps } from "./DummyAuth";
 import { OAuth2AuthProps } from "./Auth";
 export declare type AuthFormProps = {
@@ -9,6 +10,8 @@ export declare type AuthFormProps = {
 export interface AuthBaseProps {
     children?: (props: AuthContentProps) => React.ReactNode;
     content?: (props: AuthContentProps) => React.ReactNode;
+    onAuthorize?: (session: AuthSession) => void;
+    onLogout?: () => void;
 }
 export interface AuthBaseInputProps {
     form: (props: AuthFormProps) => React.ReactNode;

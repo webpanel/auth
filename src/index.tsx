@@ -1,3 +1,4 @@
+import { AuthSession } from "./AuthSession";
 import { DummyAuthProps } from "./DummyAuth";
 import { OAuth2AuthProps } from "./Auth";
 
@@ -12,6 +13,9 @@ export interface AuthBaseProps {
 
   // deprecated, please use children
   content?: (props: AuthContentProps) => React.ReactNode;
+
+  onAuthorize?: (session: AuthSession) => void;
+  onLogout?: () => void;
 }
 
 export interface AuthBaseInputProps {

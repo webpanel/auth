@@ -63,7 +63,7 @@ export class OAuth2Auth extends React.Component<
     clientId: this.props.clientId,
     clientSecret: this.props.clientSecret,
     audience: this.props.audience,
-    scope: this.props.scope
+    scope: this.props.scope,
   });
 
   state: AuthState = { isAuthorizing: false, authorizationError: undefined };
@@ -105,11 +105,17 @@ export class OAuth2Auth extends React.Component<
     } catch (authorizationError) {
       this.setState({ authorizationError, isAuthorizing: false });
     }
+    if (this.props.onAuthorize) {
+      this.props.onAuthorize(this.authSession);
+    }
   };
 
   logout = async () => {
     this.authSession.logout();
     await this.auth.logout();
+    if (this.props.onLogout) {
+      this.props.onLogout();
+    }
   };
 
   authorize = async () => {
@@ -123,6 +129,10 @@ export class OAuth2Auth extends React.Component<
       // no need to update state as we redirect to root page ... this.setState({ isAuthorizing: false });
     } catch (authorizationError) {
       this.setState({ authorizationError, isAuthorizing: false });
+    }
+
+    if (this.props.onAuthorize) {
+      this.props.onAuthorize(this.authSession);
     }
   };
 
@@ -145,7 +155,7 @@ export class OAuth2Auth extends React.Component<
             userName:
               (this.props.userNameGetter &&
                 this.props.userNameGetter(this.authSession)) ||
-              this.defaultUsernameGetter(this.authSession)
+              this.defaultUsernameGetter(this.authSession),
           })) ||
         "no content"
       );
@@ -155,7 +165,7 @@ export class OAuth2Auth extends React.Component<
           await this.handleLogin(username, password);
         },
         isAuthorizing: this.state.isAuthorizing,
-        authorizationError: this.state.authorizationError
+        authorizationError: this.state.authorizationError,
       });
     } else {
       const { processing, failed } = this.props;
